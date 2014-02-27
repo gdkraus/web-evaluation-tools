@@ -23,6 +23,10 @@ var ncsuA11yToolHeadingCSSString = ".heading-highlight{background:#afff00;outlin
 
 var ncsuA11yToolARIALandmarksCSSString = ".aria-landmark-highlight{background:#fcc;outline: 3px #f00 solid;border: 3px #f00 solid;clear:both;} p.aria-landmark-highlight-note{background:#f99;font-weight:bold;margin:0;padding:0;font-size:1em;padding-top:1.2em;}";
 
+var ncsuA11yToolARIARolesCSSString = ".aria-role-highlight{background:#cfc;outline: 3px #0f0 solid;border: 3px #0f0 solid;clear:both;} p.aria-role-highlight-note{background:#9f9;font-weight:bold;margin:0;padding:0;font-size:1em;padding-top:1.2em;}";
+
+var ncsuA11yToolARIAAttributesCSSString = ".aria-attribute-highlight{background:#ccf;outline: 3px #00f solid;border: 3px #00f solid;clear:both;} p.aria-attribute-highlight-note{background:#99f;font-weight:bold;margin:0;padding:0;font-size:1em;padding-top:1.2em;}";
+
 var ncsuA11yToolTabindexCSSString = ".tabindex-highlight{background:#fe0;outline: 3px #ffd700 solid;border: 3px #ffd700 solid;} p.tabindex-highlight-note{background:#ffee00;font-weight:bold;margin:3px;padding:3px;font-size:1em;}";
 
 var ncsuA11yToolInternalLinksCSSString = ".internal-link-highlight{background:#ccf;outline: 3px #ffd700 solid;border: 3px #00f solid;position:relative;width:auto;left:auto;top:auto;} p.internal-link-highlight-note{background:#ccf;font-weight:bold;margin:3px;padding:3px;font-size:1em;position:relative;width:auto;left:auto;top:auto;}";
@@ -32,6 +36,8 @@ var ncsuA11yToolCrossSiteContentCSSString = ".cross-site-content-highlight{borde
 // Track the number of instances for each test
 var ncsuA11yToolHeadingsCount = 0;
 var ncsuA11yToolARIALandmarksCount = 0;
+var ncsuA11yToolARIARolesCount = 0;
+var ncsuA11yToolARIAAttributesCount = 0;
 var ncsuA11yToolTabindexCount = 0;
 var ncsuA11yToolInternalLinksCount = 0;
 var ncsuA11yToolCrossSiteContentCount = 0;
@@ -151,6 +157,137 @@ function ncsuA11yToolAriaLandmarks() {
 
         if (ncsuA11yToolGetNumberOfARIALandmarks() == 0) {
             alert('No ARIA Landmarks were found');
+        }
+    }
+}
+
+/************ ARIA ROLES THAT ARE NOT LANDMARKS ************/
+// count the number of ARIA roles that are not landmarks in a given frame
+function ncsuA11yToolCountARIARoles(fr) {
+    ncsuA11yToolARIARolesCount += fr.find('[role]:not([role="navigation"],[role="main"],[role="form"],[role="search"],[role="banner"],[role="complementary"],[role="contentinfo"])').length;
+}
+
+// count the number of ARIA roles that are not landmarks, recursing through all the frames
+function ncsuA11yToolGetNumberOfARIARoles() {
+    recurseFrames(jQuery('html'), ncsuA11yToolCountARIARoles);
+    return ncsuA11yToolARIARolesCount;
+}
+
+// add the style for highlighting ARIA roles that are not landmarks for a given frame
+function ncsuA11yToolAddARIARolesStyle(fr) {
+    fr.find('head').append("<style type='text/css'>" + ncsuA11yToolARIARolesCSSString + "</style>");
+}
+
+// remove the style for highlighting ARIA roles that are not landmarks for a given frame
+function ncsuA11yToolRemoveARIARolesStyle(fr) {
+    fr.find('style:contains(' + ncsuA11yToolARIARolesCSSString + ')').remove();
+}
+
+// add the contextual notes for each ARIA roles that are not landmarks for a given frame
+function ncsuA11yToolAddARIARolesNotes(fr) {
+    fr.find('.aria-role-highlight-note').remove()
+    fr.find('[role]:not([role="navigation"],[role="main"],[role="form"],[role="search"],[role="banner"],[role="complementary"],[role="contentinfo"])').each(function() {
+        jQuery(this).addClass('aria-role-highlight')
+        jQuery(this).prepend("<p class='aria-role-highlight-note'>Role: " + jQuery(this).attr("role") + "</p>")
+    });
+}
+
+// remove the contextual notes for each ARIA roles that are not landmarks for a given frame
+function ncsuA11yToolRemoveARIARolesNotes(fr) {
+    fr.find('.aria-role-highlight-note').remove();
+    fr.find('[role]:not([role="navigation"],[role="main"],[role="form"],[role="search"],[role="banner"],[role="complementary"],[role="contentinfo"])').each(function() {
+        jQuery(this).removeClass('aria-role-highlight')
+    });
+
+}
+
+// add/remove the ARIA roles that are not landmarks tool
+function ncsuA11yToolAriaRoles() {
+    if (jQuery('style:contains(' + ncsuA11yToolARIARolesCSSString + ')').length) {// need to remove from the DOM
+        recurseFrames(jQuery('html'), ncsuA11yToolRemoveARIARolesStyle); //remove the CSS style from the head
+        recurseFrames(jQuery('html'), ncsuA11yToolRemoveARIARolesNotes);
+    } else { // need to insert into the DOM
+        recurseFrames(jQuery('html'), ncsuA11yToolAddARIARolesStyle);
+        recurseFrames(jQuery('html'), ncsuA11yToolAddARIARolesNotes);
+
+        if (ncsuA11yToolGetNumberOfARIARoles() == 0) {
+            alert('No ARIA Roles were found');
+        }
+    }
+}
+
+
+/************ ARIA ATTRIBUTES (NOT ROLE) ************/
+// count the number of ARIA attributes (not role) in a given frame
+function ncsuA11yToolCountARIAAttributes(fr) {
+    //console.log(fr);
+    var ARIAAttributeCount = 0;
+    $('*', fr).each(function() {
+        $.each(this.attributes, function() {
+            if (this.specified) {
+                if (this.name.substring(0, 5).toLowerCase() == 'aria-') {
+                    ARIAAttributeCount = ARIAAttributeCount + 1;
+                }
+            }
+        });
+    });
+    ncsuA11yToolARIAAttributesCount += ARIAAttributeCount;
+}
+
+// count the number of ARIA attributes (not role), recursing through all the frames
+function ncsuA11yToolGetNumberOfARIAAttributes() {
+    recurseFrames(jQuery('html'), ncsuA11yToolCountARIAAttributes);
+    return ncsuA11yToolARIAAttributesCount;
+}
+
+// add the style for highlighting ARIA attributes (not role) for a given frame
+function ncsuA11yToolAddARIAAttributesStyle(fr) {
+    fr.find('head').append("<style type='text/css'>" + ncsuA11yToolARIAAttributesCSSString + "</style>");
+}
+
+// remove the style for highlighting ARIA attributes (not role) for a given frame
+function ncsuA11yToolRemoveARIAAttributesStyle(fr) {
+    fr.find('style:contains(' + ncsuA11yToolARIAAttributesCSSString + ')').remove();
+}
+
+// add the contextual notes for each ARIA attributes (not role) for a given frame
+function ncsuA11yToolAddARIAAttributesNotes(fr) {
+    var currentElement;
+    fr.find('.aria-attribute-highlight-note').remove()
+    $('*', fr).each(function() {
+        currentElement = this;
+        $.each(this.attributes, function() {
+            if (this.specified) {
+                if (this.name.substring(0, 5).toLowerCase() == 'aria-') {
+                    jQuery(currentElement).addClass('aria-attribute-highlight');
+                    jQuery(currentElement).prepend("<p class='aria-attribute-highlight-note'>ARIA Attribute: " + this.name + "="+ this.value +"</p>");
+                }
+            }
+        });
+    });
+}
+
+// remove the contextual notes for each ARIA attributes (not role) for a given frame
+function ncsuA11yToolRemoveARIAAttributesNotes(fr) {
+    fr.find('.aria-attribute-highlight-note').remove();
+    jQuery('*',fr).removeClass('aria-attribute-highlight');
+//    fr.find('[role]:not([role="navigation"],[role="main"],[role="form"],[role="search"],[role="banner"],[role="complementary"],[role="contentinfo"])').each(function() {
+//        jQuery(this).removeClass('aria-attribute-highlight')
+//    });
+
+}
+
+// add/remove the ARIA attributes (not role) tool
+function ncsuA11yToolAriaAttributes() {
+    if (jQuery('style:contains(' + ncsuA11yToolARIAAttributesCSSString + ')').length) {// need to remove from the DOM
+        recurseFrames(jQuery('html'), ncsuA11yToolRemoveARIAAttributesStyle); //remove the CSS style from the head
+        recurseFrames(jQuery('html'), ncsuA11yToolRemoveARIAAttributesNotes);
+    } else { // need to insert into the DOM
+        recurseFrames(jQuery('html'), ncsuA11yToolAddARIAAttributesStyle);
+        recurseFrames(jQuery('html'), ncsuA11yToolAddARIAAttributesNotes);
+
+        if (ncsuA11yToolGetNumberOfARIAAttributes() == 0) {
+            alert('No ARIA Attributes were found');
         }
     }
 }
@@ -363,15 +500,41 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
     jQuery("<style type='text/css'>" + bodyCssString + "</style>").appendTo("head");
 
     // css for the toolbar
-    var toolsCSSString = "#ncsuA11yTools {border: 1px solid #000;text-align:center !important;font-size:12pt !important;background:#eee !important;margin:0 !important;padding:3px !important;bottom:0 !important;left:0 !important;position:fixed !important;width:100% !important;z-index:9999999 !important} #ncsuA11yTools label{margin:0 20px 0 3px; display:inline !important; color:#000 !important;} #ncsuA11yTools #ncsuA11yCrossSiteContent{color:c00 !important; display:inline;margin-left:20px;font-weight:bold;}";
+    var toolsCSSString = "#ncsuA11yTools {border: 1px solid #000;text-align:center !important;font-size:12pt !important;background:#eee !important;margin:0 !important;padding:3px !important;bottom:0 !important;left:0 !important;position:fixed !important;width:100% !important;z-index:9999999 !important} #ncsuA11yTools label{margin-right:1em; display:inline !important; color:#000 !important;}";
     jQuery("<style type='text/css'>" + toolsCSSString + "</style>").appendTo("head");
 
     // add the toolbar
-    jQuery('body').prepend('<div id="ncsuA11yTools"><input id="ncsua11ytoolheadings" name="headings" type="checkbox" onChange="ncsuA11yToolHeadings();"><label for="ncsua11ytoolheadings">Headings: </label><input id="ncsua11ytoolarialandmarks" name="arialandmarks" type="checkbox" onChange="ncsuA11yToolAriaLandmarks();"><label for="ncsua11ytoolarialandmarks">ARIA Landmarks: </label><input id="ncsua11ytooltabindex" name="tabindex" type="checkbox" onChange="ncsuA11yToolTabIndex();"><label for="ncsua11ytooltabindex">tabindex: </label><input id="ncsua11ytoolinternallink" name="internallink" type="checkbox" onChange="ncsuA11yToolInternalLink();"><label for="ncsua11ytoolinternallink">Internal Link: </label><input id="ncsua11ycrosssitecontent" name="crosssitecontent" type="checkbox" onChange="ncsuA11yToolCrossSiteContent();"><label for="ncsua11ycrosssitecontent">Cross Site Content: </label><input id="ncsua11ytoolvisualfocus" name="visualfocus" type="checkbox" onChange="ncsuA11yToolVisualFocus();"><label for="ncsua11ytoolvisualfocus">Force Show Visual Focus</label></div>')
+    jQuery('body').prepend('<div id="ncsuA11yTools">\n\
+<input id="ncsua11ytoolheadings" name="headings" type="checkbox" onChange="ncsuA11yToolHeadings();">\n\
+<label for="ncsua11ytoolheadings">Headings: </label>\n\
+\n\
+<input id="ncsua11ytoolarialandmarks" name="arialandmarks" type="checkbox" onChange="ncsuA11yToolAriaLandmarks();">\n\
+<label for="ncsua11ytoolarialandmarks">ARIA Landmarks: </label>\n\
+\n\
+<input id="ncsua11ytoolariaroles" name="ariaroles" type="checkbox" onChange="ncsuA11yToolAriaRoles();">\n\
+<label for="ncsua11ytoolariaroles">ARIA Roles: </label>\n\
+\n\
+<input id="ncsua11ytoolariaattributes" name="ariaattributes" type="checkbox" onChange="ncsuA11yToolAriaAttributes();">\n\
+<label for="ncsua11ytoolariaattributes">ARIA Attributes: </label>\n\
+\n\
+<input id="ncsua11ytooltabindex" name="tabindex" type="checkbox" onChange="ncsuA11yToolTabIndex();">\n\
+<label for="ncsua11ytooltabindex">tabindex: </label>\n\
+\n\
+<input id="ncsua11ytoolinternallink" name="internallink" type="checkbox" onChange="ncsuA11yToolInternalLink();">\n\
+<label for="ncsua11ytoolinternallink">Internal Link: </label>\n\
+\n\
+<input id="ncsua11ycrosssitecontent" name="crosssitecontent" type="checkbox" onChange="ncsuA11yToolCrossSiteContent();">\n\
+<label for="ncsua11ycrosssitecontent">Cross Site Content: </label>\n\
+\n\
+<input id="ncsua11ytoolvisualfocus" name="visualfocus" type="checkbox" onChange="ncsuA11yToolVisualFocus();">\n\
+<label for="ncsua11ytoolvisualfocus">Force Show Visual Focus</label>\n\
+</div>')
 
     // append the number of instances to each appropriate tool
     jQuery('label[for="ncsua11ytoolheadings"]').append(ncsuA11yToolGetNumberOfHeadings())
     jQuery('label[for="ncsua11ytoolarialandmarks"]').append(ncsuA11yToolGetNumberOfARIALandmarks())
+    jQuery('label[for="ncsua11ytoolariaroles"]').append(ncsuA11yToolGetNumberOfARIARoles())
+    jQuery('label[for="ncsua11ytoolariaattributes"]').append(ncsuA11yToolGetNumberOfARIAAttributes())
     jQuery('label[for="ncsua11ytooltabindex"]').append(ncsuA11yToolGetNumberOfTabindex())
     jQuery('label[for="ncsua11ytoolinternallink"]').append(ncsuA11yToolGetNumberOfInternalLinks())
     jQuery('label[for="ncsua11ycrosssitecontent"]').append(ncsuA11yToolGetNumberOfCrossSiteContent())
