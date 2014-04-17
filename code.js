@@ -495,12 +495,12 @@ function ncsuA11yToolCrossSiteContent() {
 
 /************ INSERT/REMOVE THE TOOL BAR ************/
 if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
-    // add space to the bottom of the page
-    var bodyCssString = "body {margin-bottom:30px !important;}";
+    // add space to the top of the page
+    var bodyCssString = "body {margin-top:3em !important;}";
     jQuery("<style type='text/css'>" + bodyCssString + "</style>").appendTo("head");
 
     // css for the toolbar
-    var toolsCSSString = "#ncsuA11yTools {border: 1px solid #000;text-align:center !important;font-size:12pt !important;background:#eee !important;margin:0 !important;padding:3px !important;bottom:0 !important;left:0 !important;position:fixed !important;width:100% !important;z-index:9999999 !important} #ncsuA11yTools label{margin-right:1em; display:inline !important; color:#000 !important;}";
+    var toolsCSSString = "#ncsuA11yTools {border: 1px solid #000;text-align:center !important;font-size:12pt !important;background:#eee !important;margin:0 !important;padding:3px !important;top:0 !important;left:0 !important;position:fixed !important;width:100% !important;z-index:9999999 !important} #ncsuA11yTools label{margin-right:1em; display:inline !important; color:#000 !important;}";
     jQuery("<style type='text/css'>" + toolsCSSString + "</style>").appendTo("head");
 
     // add the toolbar
