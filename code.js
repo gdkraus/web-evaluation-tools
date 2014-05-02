@@ -40,6 +40,7 @@ var ncsuA11yToolARIARolesCount = 0;
 var ncsuA11yToolARIAAttributesCount = 0;
 var ncsuA11yToolTabindexCount = 0;
 var ncsuA11yToolInternalLinksCount = 0;
+var ncsuA11yToolInternalLinksMissingTabindex = false;
 var ncsuA11yToolCrossSiteContentCount = 0;
 
 /****** HEADINGS ******/
@@ -354,12 +355,18 @@ function ncsuA11yToolTabIndex() {
 // count the number of internal links in a given frame
 function ncsuA11yToolCountInternalLinks(fr) {
     ncsuA11yToolInternalLinksCount += fr.find('[href^="#"][href!="#"]').length;
+    
+    fr.find('[href^="#"][href!="#"]').each(function() {
+    var missingTabIndex = false;
+    if(jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').attr('tabindex')===undefined) {missingTabIndex=true;} else {missingTabIndex=false;}
+    if(missingTabIndex){ncsuA11yToolInternalLinksMissingTabindex = true} else {}
+   });
 }
 
 // count the number of internal links, recursing through all the frames
 function ncsuA11yToolGetNumberOfInternalLinks() {
     recurseFrames(jQuery('html'), ncsuA11yToolCountInternalLinks);
-    return ncsuA11yToolInternalLinksCount;
+    return ncsuA11yToolInternalLinksCount+(ncsuA11yToolInternalLinksMissingTabindex == true?'*':'');
 }
 
 // add the style for highlighting internal links for a given frame
@@ -377,7 +384,10 @@ function ncsuA11yToolAddInternalLinksNotes(fr) {
     fr.find('[href^="#"][href!="#"]').each(function() {
         jQuery(this).addClass('internal-link-highlight')
         jQuery(this).parent().prepend("<p class='internal-link-highlight-note'>Internal Link Source: " + jQuery(this).text() + "</p>")
-        jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').prepend("<p class='internal-link-highlight-note'>Internal Link Target: " + jQuery(this).text() + "</p>")
+        var missingTabIndex = false;
+        if(jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').attr('tabindex')===undefined) {missingTabIndex=true;} else {missingTabIndex=false;}
+        
+        jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').prepend("<p class='internal-link-highlight-note'>Internal Link Target"+(missingTabIndex?' (missing tabindex)':'')+": " + jQuery(this).text() + "</p>")
 
         //jQuery(jQuery(this).attr("href")).prepend("<p class='internal-link-highlight-note'>Internal Link Target: " + jQuery(this).text() + "</p>")
     });

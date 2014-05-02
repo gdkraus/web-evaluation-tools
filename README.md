@@ -10,7 +10,7 @@ This tool allows you to
 * see where the headings are on a page, and what the heading text is
 * see where ARIA landmarks are used, and any accompanying labels they have
 * where any tabindex values are set and their values
-* where there are any internal links, including their source and target
+* where there are any internal links, including their source and target, and if the target has a tabindex set
 * where there is cross-site content, indicating it cannot be evaluated with this tool
 * the ability to force the keyboard focus to be seen
 
