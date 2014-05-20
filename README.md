@@ -13,6 +13,7 @@ This tool allows you to
 * where there are any internal links, including their source and target, and if the target has a tabindex set
 * where there is cross-site content, indicating it cannot be evaluated with this tool
 * the ability to force the keyboard focus to be seen
+* show what languages are defined on different parts of the page
 
 The initial reason for developing this tool was to check for certain features that either required careful source code evaluation, or actually using a screen reader to test. The hope is that this tool will reduce the amount of testing that has to be done by either of those methods.
 
