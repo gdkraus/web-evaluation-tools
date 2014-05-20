@@ -33,6 +33,8 @@ var ncsuA11yToolInternalLinksCSSString = ".internal-link-highlight{background:#c
 
 var ncsuA11yToolCrossSiteContentCSSString = ".cross-site-content-highlight{border: 3px orange solid !important;} p.cross-site-content-highlight-note{background:orange;color:#000;font-weight:bold;margin:3px;padding:3px;font-size:1em;}";
 
+var ncsuA11yToolLanguageAttributesCSSString = ".language-attribute-highlight{background:#ccf;outline: 3px #00f solid;border: 3px #00f solid;clear:both;} p.language-attribute-highlight-note{background:#99f;font-weight:bold;margin:0;padding:0;font-size:1em;padding-top:1.2em;}";
+
 // Track the number of instances for each test
 var ncsuA11yToolHeadingsCount = 0;
 var ncsuA11yToolARIALandmarksCount = 0;
@@ -42,6 +44,9 @@ var ncsuA11yToolTabindexCount = 0;
 var ncsuA11yToolInternalLinksCount = 0;
 var ncsuA11yToolInternalLinksMissingTabindex = false;
 var ncsuA11yToolCrossSiteContentCount = 0;
+var ncsuA11yToolLanguageAttributesCount = 0;
+var languageAttributesFirstPass = true;
+var languageAttributesFirstPassAdd = true;
 
 /****** HEADINGS ******/
 // count the number of headings in a given frame
@@ -254,14 +259,14 @@ function ncsuA11yToolRemoveARIAAttributesStyle(fr) {
 // add the contextual notes for each ARIA attributes (not role) for a given frame
 function ncsuA11yToolAddARIAAttributesNotes(fr) {
     var currentElement;
-    fr.find('.aria-attribute-highlight-note').remove()
+    //fr.find('.aria-attribute-highlight-note').remove()
     $('*', fr).each(function() {
         currentElement = this;
         $.each(this.attributes, function() {
             if (this.specified) {
                 if (this.name.substring(0, 5).toLowerCase() == 'aria-') {
                     jQuery(currentElement).addClass('aria-attribute-highlight');
-                    jQuery(currentElement).prepend("<p class='aria-attribute-highlight-note'>ARIA Attribute: " + this.name + "="+ this.value +"</p>");
+                    jQuery(currentElement).prepend("<p class='aria-attribute-highlight-note'>ARIA Attribute: " + this.name + "=" + this.value + "</p>");
                 }
             }
         });
@@ -271,7 +276,7 @@ function ncsuA11yToolAddARIAAttributesNotes(fr) {
 // remove the contextual notes for each ARIA attributes (not role) for a given frame
 function ncsuA11yToolRemoveARIAAttributesNotes(fr) {
     fr.find('.aria-attribute-highlight-note').remove();
-    jQuery('*',fr).removeClass('aria-attribute-highlight');
+    jQuery('*', fr).removeClass('aria-attribute-highlight');
 //    fr.find('[role]:not([role="navigation"],[role="main"],[role="form"],[role="search"],[role="banner"],[role="complementary"],[role="contentinfo"])').each(function() {
 //        jQuery(this).removeClass('aria-attribute-highlight')
 //    });
@@ -355,18 +360,25 @@ function ncsuA11yToolTabIndex() {
 // count the number of internal links in a given frame
 function ncsuA11yToolCountInternalLinks(fr) {
     ncsuA11yToolInternalLinksCount += fr.find('[href^="#"][href!="#"]').length;
-    
+
     fr.find('[href^="#"][href!="#"]').each(function() {
-    var missingTabIndex = false;
-    if(jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').attr('tabindex')===undefined) {missingTabIndex=true;} else {missingTabIndex=false;}
-    if(missingTabIndex){ncsuA11yToolInternalLinksMissingTabindex = true} else {}
-   });
+        var missingTabIndex = false;
+        if (jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').attr('tabindex') === undefined) {
+            missingTabIndex = true;
+        } else {
+            missingTabIndex = false;
+        }
+        if (missingTabIndex) {
+            ncsuA11yToolInternalLinksMissingTabindex = true
+        } else {
+        }
+    });
 }
 
 // count the number of internal links, recursing through all the frames
 function ncsuA11yToolGetNumberOfInternalLinks() {
     recurseFrames(jQuery('html'), ncsuA11yToolCountInternalLinks);
-    return ncsuA11yToolInternalLinksCount+(ncsuA11yToolInternalLinksMissingTabindex == true?'*':'');
+    return ncsuA11yToolInternalLinksCount + (ncsuA11yToolInternalLinksMissingTabindex == true ? '*' : '');
 }
 
 // add the style for highlighting internal links for a given frame
@@ -385,9 +397,13 @@ function ncsuA11yToolAddInternalLinksNotes(fr) {
         jQuery(this).addClass('internal-link-highlight')
         jQuery(this).parent().prepend("<p class='internal-link-highlight-note'>Internal Link Source: " + jQuery(this).text() + "</p>")
         var missingTabIndex = false;
-        if(jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').attr('tabindex')===undefined) {missingTabIndex=true;} else {missingTabIndex=false;}
-        
-        jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').prepend("<p class='internal-link-highlight-note'>Internal Link Target"+(missingTabIndex?' (missing tabindex)':'')+": " + jQuery(this).text() + "</p>")
+        if (jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').attr('tabindex') === undefined) {
+            missingTabIndex = true;
+        } else {
+            missingTabIndex = false;
+        }
+
+        jQuery(jQuery(this).attr("href") + ',[name="' + jQuery(this).attr('href').substring(1, jQuery('[href^="#"][href!="#"]').attr('href').length) + '"]').prepend("<p class='internal-link-highlight-note'>Internal Link Target" + (missingTabIndex ? ' (missing tabindex)' : '') + ": " + jQuery(this).text() + "</p>")
 
         //jQuery(jQuery(this).attr("href")).prepend("<p class='internal-link-highlight-note'>Internal Link Target: " + jQuery(this).text() + "</p>")
     });
@@ -503,6 +519,119 @@ function ncsuA11yToolCrossSiteContent() {
 
 }
 
+/************ LANGUAGE ATTRIBUTES ************/
+// count the number of language attributes in a given frame
+function ncsuA11yToolCountLanguageAttributes(fr) {
+    var languageAttributeCount = 0;
+
+    if (languageAttributesFirstPass) { // need to do this check to accurately determine lang attributes on the outer most html element of page. html elements in iframes do not need this check
+        languageAttributesFirstPass = false;
+        $('*').each(function() {
+            $.each(this.attributes, function() {
+                if (this.specified) {
+                    if (this.name.toLowerCase() == 'lang') {
+                        languageAttributeCount = languageAttributeCount + 1;
+                        console.log('found');
+                    }
+                }
+            });
+        });
+    } else {
+        $('*', fr).each(function() {
+            $.each(this.attributes, function() {
+                if (this.specified) {
+                    if (this.name.toLowerCase() == 'lang') {
+                        languageAttributeCount = languageAttributeCount + 1;
+                        console.log('found');
+                    }
+                }
+            });
+        });
+    }
+    ncsuA11yToolLanguageAttributesCount += languageAttributeCount;
+
+}
+
+// count the number of language attributes, recursing through all the frames
+function ncsuA11yToolGetNumberOfLanguageAttributes() {
+    languageAttributesFirstPass = true;
+    recurseFrames(jQuery('html'), ncsuA11yToolCountLanguageAttributes);
+    return ncsuA11yToolLanguageAttributesCount;
+}
+
+// add the style for highlighting language attributes for a given frame
+function ncsuA11yToolAddLanguageAttributesStyle(fr) {
+    fr.find('head').append("<style type='text/css'>" + ncsuA11yToolLanguageAttributesCSSString + "</style>");
+}
+
+// remove the style for highlighting language attributes for a given frame
+function ncsuA11yToolRemoveLanguageAttributesStyle(fr) {
+    fr.find('style:contains(' + ncsuA11yToolLanguageAttributesCSSString + ')').remove();
+}
+
+// add the contextual notes for each language attributes for a given frame
+function ncsuA11yToolAddLanguageAttributesNotes(fr) {
+    var currentElement;
+    //fr.find('.language-attribute-highlight-note').remove()
+    if (languageAttributesFirstPassAdd) { // need to do this check to accurately determine lang attributes on the outer most html element of page. html elements in iframes do not need this check
+        $('*').each(function() {
+            currentElement = this;
+            $.each(this.attributes, function() {
+                if (this.specified) {
+                    if (this.name.toLowerCase() == 'lang') {
+                        if (languageAttributesFirstPassAdd) {
+                            jQuery('body').addClass('language-attribute-highlight');
+                            jQuery('body').prepend("<p class='language-attribute-highlight-note'>Language=\"" + this.value + "\"</p>");
+                            languageAttributesFirstPassAdd = false;
+                        } else {
+                            jQuery(currentElement).addClass('language-attribute-highlight');
+                            jQuery(currentElement).prepend("<p class='language-attribute-highlight-note'>Language=\"" + this.value + "\"</p>");
+                        }
+
+                    }
+                }
+            });
+        });
+    } else {
+        $('*', fr).each(function() {
+            currentElement = this;
+            $.each(this.attributes, function() {
+                if (this.specified) {
+                    if (this.name.toLowerCase() == 'lang') {
+                        jQuery(currentElement).addClass('language-attribute-highlight');
+                        jQuery(currentElement).prepend("<p class='language-attribute-highlight-note'>Language=\"" + this.value + "\"</p>");
+                    }
+                }
+            });
+        });
+    }
+
+
+}
+
+// remove the contextual notes for each language attributes for a given frame
+function ncsuA11yToolRemoveLanguageAttributesNotes(fr) {
+    languageAttributesFirstPassAdd = true;
+    fr.find('.language-attribute-highlight-note').remove();
+    jQuery('*', fr).removeClass('language-attribute-highlight');
+}
+
+// add/remove the language attributes tool
+function ncsuA11yToolLanguageAttributes() {
+    if (jQuery('style:contains(' + ncsuA11yToolLanguageAttributesCSSString + ')').length) {// need to remove from the DOM
+        recurseFrames(jQuery('html'), ncsuA11yToolRemoveLanguageAttributesStyle); //remove the CSS style from the head
+        recurseFrames(jQuery('html'), ncsuA11yToolRemoveLanguageAttributesNotes);
+    } else { // need to insert into the DOM
+        recurseFrames(jQuery('html'), ncsuA11yToolAddLanguageAttributesStyle);
+        recurseFrames(jQuery('html'), ncsuA11yToolAddLanguageAttributesNotes);
+
+        if (ncsuA11yToolGetNumberOfLanguageAttributes() == 0) {
+            alert('No Language attributes were found');
+        }
+    }
+}
+
+
 /************ INSERT/REMOVE THE TOOL BAR ************/
 if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
     // add space to the top of the page
@@ -538,6 +667,9 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
 \n\
 <input id="ncsua11ytoolvisualfocus" name="visualfocus" type="checkbox" onChange="ncsuA11yToolVisualFocus();">\n\
 <label for="ncsua11ytoolvisualfocus">Force Show Visual Focus</label>\n\
+\n\
+<input id="ncsua11ytoollanguageattributes" name="languageattributes" type="checkbox" onChange="ncsuA11yToolLanguageAttributes();">\n\
+<label for="ncsua11ytoollanguageattributes">Language Attributes: </label>\n\
 </div>')
 
     // append the number of instances to each appropriate tool
@@ -548,6 +680,7 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
     jQuery('label[for="ncsua11ytooltabindex"]').append(ncsuA11yToolGetNumberOfTabindex())
     jQuery('label[for="ncsua11ytoolinternallink"]').append(ncsuA11yToolGetNumberOfInternalLinks())
     jQuery('label[for="ncsua11ycrosssitecontent"]').append(ncsuA11yToolGetNumberOfCrossSiteContent())
+    jQuery('label[for="ncsua11ytoollanguageattributes"]').append(ncsuA11yToolGetNumberOfLanguageAttributes())
 
 } else { // remove the toolbar
     jQuery('#ncsuA11yTools').remove()
