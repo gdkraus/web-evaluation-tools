@@ -626,7 +626,7 @@ function ncsuA11yToolLanguageAttributes() {
         recurseFrames(jQuery('html'), ncsuA11yToolAddLanguageAttributesNotes);
 
         if (ncsuA11yToolGetNumberOfLanguageAttributes() == 0) {
-            alert('No Language attributes were found');
+            alert('No language attributes were found');
         }
     }
 }
@@ -639,37 +639,37 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
     jQuery("<style type='text/css'>" + bodyCssString + "</style>").appendTo("head");
 
     // css for the toolbar
-    var toolsCSSString = "#ncsuA11yTools {border: 1px solid #000;text-align:center !important;font-size:12pt !important;background:#eee !important;margin:0 !important;padding:3px !important;top:0 !important;left:0 !important;position:fixed !important;width:100% !important;z-index:9999999 !important} #ncsuA11yTools label{margin-right:1em; display:inline !important; color:#000 !important;font-size:1em !important; font-weight:normal !important; font-family: arial, sans-serif important;}";
+    var toolsCSSString = "#ncsuA11yTools {border: 1px solid #000;text-align:center !important;font-size:12pt !important;background:#eee !important;margin:0 !important;padding:3px !important;top:0 !important;left:0 !important;position:fixed !important;width:100% !important;z-index:9999999 !important} #ncsuA11yTools label{margin-right:1em; display:inline !important; color:#000 !important;font-size:1em !important; font-weight:normal !important; font-family: arial, sans-serif important;}.ncsua11ytoolitem{white-space:nowrap;}";
     jQuery("<style type='text/css'>" + toolsCSSString + "</style>").appendTo("head");
 
     // add the toolbar
     jQuery('body').prepend('<div id="ncsuA11yTools">\n\
-<input id="ncsua11ytoolheadings" name="headings" type="checkbox" onChange="ncsuA11yToolHeadings();">\n\
-<label for="ncsua11ytoolheadings">Headings: </label>\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ytoolheadings" name="headings" type="checkbox" onChange="ncsuA11yToolHeadings();">\n\
+<label for="ncsua11ytoolheadings">Headings: </label></span>\n\
 \n\
-<input id="ncsua11ytoolarialandmarks" name="arialandmarks" type="checkbox" onChange="ncsuA11yToolAriaLandmarks();">\n\
-<label for="ncsua11ytoolarialandmarks">ARIA Landmarks: </label>\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ytoolarialandmarks" name="arialandmarks" type="checkbox" onChange="ncsuA11yToolAriaLandmarks();">\n\
+<label for="ncsua11ytoolarialandmarks">ARIA Landmarks: </label></span>\n\
 \n\
-<input id="ncsua11ytoolariaroles" name="ariaroles" type="checkbox" onChange="ncsuA11yToolAriaRoles();">\n\
-<label for="ncsua11ytoolariaroles">ARIA Roles: </label>\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ytoolariaroles" name="ariaroles" type="checkbox" onChange="ncsuA11yToolAriaRoles();">\n\
+<label for="ncsua11ytoolariaroles">ARIA Roles: </label></span>\n\
 \n\
-<input id="ncsua11ytoolariaattributes" name="ariaattributes" type="checkbox" onChange="ncsuA11yToolAriaAttributes();">\n\
-<label for="ncsua11ytoolariaattributes">ARIA Attributes: </label>\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ytoolariaattributes" name="ariaattributes" type="checkbox" onChange="ncsuA11yToolAriaAttributes();">\n\
+<label for="ncsua11ytoolariaattributes">ARIA Attributes: </label></span>\n\
 \n\
-<input id="ncsua11ytooltabindex" name="tabindex" type="checkbox" onChange="ncsuA11yToolTabIndex();">\n\
-<label for="ncsua11ytooltabindex">tabindex: </label>\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ytooltabindex" name="tabindex" type="checkbox" onChange="ncsuA11yToolTabIndex();">\n\
+<label for="ncsua11ytooltabindex">tabindex: </label></span>\n\
 \n\
-<input id="ncsua11ytoolinternallink" name="internallink" type="checkbox" onChange="ncsuA11yToolInternalLink();">\n\
-<label for="ncsua11ytoolinternallink">Internal Link: </label>\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ytoolinternallink" name="internallink" type="checkbox" onChange="ncsuA11yToolInternalLink();">\n\
+<label for="ncsua11ytoolinternallink">Internal Link: </label></span>\n\
 \n\
-<input id="ncsua11ycrosssitecontent" name="crosssitecontent" type="checkbox" onChange="ncsuA11yToolCrossSiteContent();">\n\
-<label for="ncsua11ycrosssitecontent">Cross Site Content: </label>\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ycrosssitecontent" name="crosssitecontent" type="checkbox" onChange="ncsuA11yToolCrossSiteContent();">\n\
+<label for="ncsua11ycrosssitecontent">Cross Site Content: </label></span>\n\
 \n\
-<input id="ncsua11ytoolvisualfocus" name="visualfocus" type="checkbox" onChange="ncsuA11yToolVisualFocus();">\n\
-<label for="ncsua11ytoolvisualfocus">Force Show Visual Focus</label>\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ytoolvisualfocus" name="visualfocus" type="checkbox" onChange="ncsuA11yToolVisualFocus();">\n\
+<label for="ncsua11ytoolvisualfocus">Force Show Visual Focus</label></span>\n\
 \n\
-<input id="ncsua11ytoollanguageattributes" name="languageattributes" type="checkbox" onChange="ncsuA11yToolLanguageAttributes();">\n\
-<label for="ncsua11ytoollanguageattributes">Language Attributes: </label>\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ytoollanguageattributes" name="languageattributes" type="checkbox" onChange="ncsuA11yToolLanguageAttributes();">\n\
+<label for="ncsua11ytoollanguageattributes">Language Attributes: </label></span>\n\
 </div>')
 
     // append the number of instances to each appropriate tool
