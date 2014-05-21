@@ -17,6 +17,8 @@ function recurseFrames(fr, f) {
 }
 
 // CSS Strings for Tests
+var ncsuA11yToolHighContrastCSSString = "*,body,html{color:#ff0!important;background-color:#000!important;font-family:sans-serif!important;filter:progid:DXImageTransform.Microsoft.gradient(enabled=false)!important}html{background:#eee!important}:focus{outline:2px solid #0FF!important}body{font-size:1.4em!important;line-height:1.6em!important;text-align:left!important;margin-left:1em!important;margin-right:auto!important}a{color:#fff!important;text-decoration:underline!important;border-color:#0F0!important}a:focus,a:hover{color:#000!important;background:#ffc!important}a:visited{color:#090!important}button,input,select,textarea{border-color:#FFF!important;border-style:solid!important;background-image:none!important}";
+
 var ncsuA11yToolVisibleFocusString = ":focus{outline:#afff00;outline: solid 3px red !important}";
 
 var ncsuA11yToolHeadingCSSString = ".heading-highlight{background:#afff00;outline: 3px #0f0 solid;border: 3px #0f0 solid;position:relative;width:auto;left:auto;top:auto;} p.heading-highlight-note{background:#0f0;font-weight:bold;margin:3px;padding:3px;font-size:1em;}";
@@ -461,6 +463,30 @@ function ncsuA11yToolVisualFocus() {
     }
 }
 
+/************ HIGH CONTRAST CSS ************/
+// add the high contrast CSS for a given frame
+function ncsuA11yToolAddHighContrastCSSStyle(fr) {
+    fr.find('head').append("<style type='text/css'>" + ncsuA11yToolHighContrastCSSString + "</style>");
+}
+
+// remove the high contrast CSS for a given frame
+function ncsuA11yToolRemoveHighContrastCSSStyle(fr) {
+    fr.find('style:contains(' + ncsuA11yToolHighContrastCSSString + ')').remove();
+}
+
+// add/remove the high contrast CSS
+function ncsuA11yToolHighContrastCSS() {
+
+    if (jQuery('style:contains(' + ncsuA11yToolHighContrastCSSString + ')').length) {
+        // need to remove from the DOM
+        recurseFrames(jQuery('html'), ncsuA11yToolRemoveHighContrastCSSStyle); //remove the CSS style from the head
+    } else {
+        // need to insert into the DOM
+        recurseFrames(jQuery('html'), ncsuA11yToolAddHighContrastCSSStyle);
+
+    }
+}
+
 /************ CROSS-SITE CONTENT ************/
 // count the number of cross-site content areas in a given frame
 function ncsuA11yToolCountCrossSiteContent(fr) {
@@ -531,7 +557,6 @@ function ncsuA11yToolCountLanguageAttributes(fr) {
                 if (this.specified) {
                     if (this.name.toLowerCase() == 'lang') {
                         languageAttributeCount = languageAttributeCount + 1;
-                        console.log('found');
                     }
                 }
             });
@@ -542,7 +567,6 @@ function ncsuA11yToolCountLanguageAttributes(fr) {
                 if (this.specified) {
                     if (this.name.toLowerCase() == 'lang') {
                         languageAttributeCount = languageAttributeCount + 1;
-                        console.log('found');
                     }
                 }
             });
@@ -639,7 +663,7 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
     jQuery("<style type='text/css'>" + bodyCssString + "</style>").appendTo("head");
 
     // css for the toolbar
-    var toolsCSSString = "#ncsuA11yTools {border: 1px solid #000;text-align:center !important;font-size:12pt !important;background:#eee !important;margin:0 !important;padding:3px !important;top:0 !important;left:0 !important;position:fixed !important;width:100% !important;z-index:9999999 !important} #ncsuA11yTools label{margin-right:1em; display:inline !important; color:#000 !important;font-size:1em !important; font-weight:normal !important; font-family: arial, sans-serif important;}.ncsua11ytoolitem{white-space:nowrap;}";
+    var toolsCSSString = "#ncsuA11yTools {line-height: 1.2em;border: 1px solid #000;text-align:center !important;font-size:12pt !important;background:#eee !important;margin:0 !important;padding:3px !important;top:0 !important;left:0 !important;position:fixed !important;width:100% !important;z-index:9999999 !important} #ncsuA11yTools input, #ncsuA11yTools span{background-color:#eee !important} #ncsuA11yTools label{background-color:#eee !important;margin-right:1em; display:inline !important; color:#000 !important;font-size:1em !important; font-weight:normal !important; font-family: arial, sans-serif important;}.ncsua11ytoolitem{white-space:nowrap;}";
     jQuery("<style type='text/css'>" + toolsCSSString + "</style>").appendTo("head");
 
     // add the toolbar
@@ -667,6 +691,9 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
 \n\
 <span class="ncsua11ytoolitem"><input id="ncsua11ytoolvisualfocus" name="visualfocus" type="checkbox" onChange="ncsuA11yToolVisualFocus();">\n\
 <label for="ncsua11ytoolvisualfocus">Force Show Visual Focus</label></span>\n\
+\n\
+<span class="ncsua11ytoolitem"><input id="ncsua11ytoolhighcontrastcss" name="highcntrast" type="checkbox" onChange="ncsuA11yToolHighContrastCSS();">\n\
+<label for="ncsua11ytoolhighcontrastcss">High Contrast CSS</label></span>\n\
 \n\
 <span class="ncsua11ytoolitem"><input id="ncsua11ytoollanguageattributes" name="languageattributes" type="checkbox" onChange="ncsuA11yToolLanguageAttributes();">\n\
 <label for="ncsua11ytoollanguageattributes">Language Attributes: </label></span>\n\
