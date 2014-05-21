@@ -466,18 +466,18 @@ function ncsuA11yToolVisualFocus() {
 /************ HIGH CONTRAST CSS ************/
 // add the high contrast CSS for a given frame
 function ncsuA11yToolAddHighContrastCSSStyle(fr) {
-    fr.find('head').append("<style type='text/css'>" + ncsuA11yToolHighContrastCSSString + "</style>");
+    fr.find('head').append("<style type='text/css' data-id='ncsuA11yToolHighContrastCSS'>" + ncsuA11yToolHighContrastCSSString + "</style>");
 }
 
 // remove the high contrast CSS for a given frame
 function ncsuA11yToolRemoveHighContrastCSSStyle(fr) {
-    fr.find('style:contains(' + ncsuA11yToolHighContrastCSSString + ')').remove();
+    fr.find('[data-id="ncsuA11yToolHighContrastCSS"]').remove();
 }
 
 // add/remove the high contrast CSS
 function ncsuA11yToolHighContrastCSS() {
 
-    if (jQuery('style:contains(' + ncsuA11yToolHighContrastCSSString + ')').length) {
+    if (jQuery('[data-id="ncsuA11yToolHighContrastCSS"]').length) {
         // need to remove from the DOM
         recurseFrames(jQuery('html'), ncsuA11yToolRemoveHighContrastCSSStyle); //remove the CSS style from the head
     } else {
