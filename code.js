@@ -696,7 +696,7 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
 <label for="ncsua11ytoolhighcontrastcss">High Contrast CSS</label></span>\n\
 \n\
 <span class="ncsua11ytoolitem"><input id="ncsua11ytoollanguageattributes" name="languageattributes" type="checkbox" onChange="ncsuA11yToolLanguageAttributes();">\n\
-<label for="ncsua11ytoollanguageattributes">Language Attributes: </label></span>\n\
+<label for="ncsu	a11ytoollanguageattributes">Language Attributes: </label></span>\n\
 </div>')
 
     // append the number of instances to each appropriate tool
