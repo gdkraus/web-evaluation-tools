@@ -1,18 +1,27 @@
 var LanguageAttributes = Tool.extend({
 	
+	name: "Language Attributes",
+	
 	CSSString: ".language-attribute-highlight{background:#ccf;outline: 3px #00f solid;border: 3px #00f solid;clear:both;} p.language-attribute-highlight-note{background:#99f;font-weight:bold;margin:0;padding:0;font-size:1em;padding-top:1.2em;}",
 	
 	languageAttributesFirstPass : true,
 	
 	languageAttributesFirstPassAdd : true,
 	
+	constructor: function(name) {
+		//alert("inside headings constructor");
+    self = this;
+	},
+	
+	TotalCount: "0",
+	
 	count: function(fr) {
-		alert("Inside headings");
+		//alert("Inside headings");
 		
 		   var languageAttributeCount = 0;
 
-    if (languageAttributesFirstPass) { // need to do this check to accurately determine lang attributes on the outer most html element of page. html elements in iframes do not need this check
-        languageAttributesFirstPass = false;
+    if (self.languageAttributesFirstPass) { // need to do this check to accurately determine lang attributes on the outer most html element of page. html elements in iframes do not need this check
+        self.languageAttributesFirstPass = false;
         $('*').each(function() {
             $.each(this.attributes, function() {
                 if (this.specified) {
@@ -34,23 +43,23 @@ var LanguageAttributes = Tool.extend({
         });
     }
 
-		TotalCount += languageAttributeCount;
+		self.TotalCount = parseInt(self.TotalCount) +  languageAttributeCount;
 	},
 	
 	getNumOf: function(fr) {
-		languageAttributesFirstPass = true;
-		recurseFrames(jQuery('html'), count);
-		return TotalCount;
+		self.languageAttributesFirstPass = true;
+		recurseFrames(jQuery('html'), self.count);
+		return self.TotalCount;
 		
 	},
 	
-	add: function(fr) {
-		fr.find('head').append("<style type='text/css'>" + CSSString + "</style>");
+	addStyle: function(fr) {
+		fr.find('head').append("<style type='text/css'>" + self.CSSString + "</style>");
 	
 	},
 	
-	remove: function(fr) {
-		fr.find('style:contains(' + CSSString + ')').remove();
+	removeStyle: function(fr) {
+		fr.find('style:contains(' + self.CSSString + ')').remove();
 		
 	},
 	
@@ -58,16 +67,16 @@ var LanguageAttributes = Tool.extend({
 		
 		var currentElement;
     //fr.find('.language-attribute-highlight-note').remove()
-    if (languageAttributesFirstPassAdd) { // need to do this check to accurately determine lang attributes on the outer most html element of page. html elements in iframes do not need this check
+    if (self.languageAttributesFirstPassAdd) { // need to do this check to accurately determine lang attributes on the outer most html element of page. html elements in iframes do not need this check
         $('*').each(function() {
             currentElement = this;
             $.each(this.attributes, function() {
                 if (this.specified) {
                     if (this.name.toLowerCase() == 'lang') {
-                        if (languageAttributesFirstPassAdd) {
+                        if (self.languageAttributesFirstPassAdd) {
                             jQuery('body').addClass('language-attribute-highlight');
                             jQuery('body').prepend("<p class='language-attribute-highlight-note'>Language=\"" + this.value + "\"</p>");
-                            languageAttributesFirstPassAdd = false;
+                            self.languageAttributesFirstPassAdd = false;
                         } else {
                             jQuery(currentElement).addClass('language-attribute-highlight');
                             jQuery(currentElement).prepend("<p class='language-attribute-highlight-note'>Language=\"" + this.value + "\"</p>");
@@ -96,7 +105,7 @@ var LanguageAttributes = Tool.extend({
 	
 	removeNotes: function(fr) {
 		
-		languageAttributesFirstPassAdd = true;
+		self.languageAttributesFirstPassAdd = true;
     fr.find('.language-attribute-highlight-note').remove();
     jQuery('*', fr).removeClass('language-attribute-highlight');
 

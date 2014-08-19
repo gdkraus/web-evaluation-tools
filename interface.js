@@ -1,6 +1,8 @@
 //var Tool = new Base;
 var Tool= Base.extend({
 	
+	name: "Tool",
+	
 	CSSString: "",
 	
 	//TotalCount: '0',

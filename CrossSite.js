@@ -1,26 +1,36 @@
 var CrossSite = Tool.extend({
 	
-	CSSString: ".aria-role-highlight{background:#cfc;outline: 3px #0f0 solid;border: 3px #0f0 solid;clear:both;} p.aria-role-highlight-note{background:#9f9;font-weight:bold;margin:0;padding:0;font-size:1em;padding-top:1.2em;}",
+	name: "Cross Site",
+	
+	
+	CSSString: ".cross-site-content-highlight{border: 3px orange solid !important;} p.cross-site-content-highlight-note{background:orange;color:#000;font-weight:bold;margin:3px;padding:3px;font-size:1em;}",
+	
+	constructor: function(name) {
+		//alert("inside headings constructor");
+    self = this;
+	},
+	
+	TotalCount: "0",
 	
 	count: function(fr) {
-		alert("Inside headings");
+		//alert("Inside headings");
 
-		TotalCount += fr.find('iframe').length;
+		self.TotalCount = parseInt(self.TotalCount) + fr.find('iframe').length;
 	},
 	
 	getNumOf: function(fr) {
-		recurseFrames(jQuery('html'), count);
-		return TotalCount;
+		recurseFrames(jQuery('html'), self.count);
+		return self.TotalCount;
 		
 	},
 	
-	add: function(fr) {
-		fr.find('head').append("<style type='text/css'>" + CSSString + "</style>");
+	addStyle: function(fr) {
+		fr.find('head').append("<style type='text/css'>" + self.CSSString + "</style>");
 	
 	},
 	
-	remove: function(fr) {
-		fr.find('style:contains(' + CSSString + ')').remove();
+	removeStyle: function(fr) {
+		fr.find('style:contains(' + self.CSSString + ')').remove();
 		
 	},
 	

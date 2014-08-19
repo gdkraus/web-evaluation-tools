@@ -1,5 +1,7 @@
 var InternalLinks = Tool.extend({
 	
+	name: "Internal Links",
+	
 	CSSString: ".internal-link-highlight{background:#ccf;outline: 3px #ffd700 solid;border: 3px #00f solid;position:relative;width:auto;left:auto;top:auto;} p.internal-link-highlight-note{background:#ccf;font-weight:bold;margin:3px;padding:3px;font-size:1em;position:relative;width:auto;left:auto;top:auto;}",
 	
 	InternalLinksMissingTabindex: false,
@@ -12,10 +14,10 @@ var InternalLinks = Tool.extend({
 	TotalCount: "0",
 	
 	count: function(fr) {
-		alert("Inside internal links");
+		//alert("Inside internal links");
 
 		self.TotalCount = parseInt(self.TotalCount)+fr.find('[href^="#"][href!="#"]').length;
-		alert(fr.find('[href^="#"][href!="#"]').length);
+		//alert(fr.find('[href^="#"][href!="#"]').length);
 		
 		fr.find('[href^="#"][href!="#"]').each(function() {
         var missingTabIndex = false;
@@ -32,15 +34,15 @@ var InternalLinks = Tool.extend({
 	},
 	
 	getNumOf: function(fr) {
-		alert("Inside get num of-- links");
+		//alert("Inside get num of-- links");
 		recurseFrames(jQuery('html'), self.count);
-		alert(self.InternalLinksMissingTabindex);
+		//alert(self.InternalLinksMissingTabindex);
 		return self.TotalCount + (self.InternalLinksMissingTabindex == true ? '*' : '');
 		
 	},
 	
 	addStyle: function(fr) {
-		alert("inside add style links");
+		//alert("inside add style links");
 		fr.find('head').append("<style type='text/css'>" + self.CSSString + "</style>");
 	
 	},

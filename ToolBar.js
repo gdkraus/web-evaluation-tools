@@ -22,7 +22,8 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
     var divString="<div id='ncsuA11yTools'>\n\ ";
     for(i=0;i<classes.length;i++)
     {
-		divString+="<span class='ncsua11ytoolitem'>"+"<input id='ncsua11ytool"+classes[i]+"' name='"+classes[i]+"' type='checkbox'>\n\ <label for='ncsua11ytool"+classes[i]+"'>"+classes[i]+": </label></span>\n\ ";
+		var obj = new window[classes[i]];
+		divString+="<span class='ncsua11ytoolitem'>"+"<input id='ncsua11ytool"+classes[i]+"' name='"+classes[i]+"' type='checkbox'>\n\ <label for='ncsua11ytool"+classes[i]+"'>"+obj.name+": </label></span>\n\ ";
 		if(i<classes.length-1)
 		divString+="\n\ ";
 	}

@@ -1,5 +1,7 @@
 var ARIAAttributes = Tool.extend({
 	
+	name: "ARIA Attributes",
+	
 	CSSString: ".aria-attribute-highlight{background:#ccf;outline: 3px #00f solid;border: 3px #00f solid;clear:both;} p.aria-attribute-highlight-note{background:#99f;font-weight:bold;margin:0;padding:0;font-size:1em;padding-top:1.2em;}",
 	
 	constructor: function(name) {
@@ -10,7 +12,7 @@ var ARIAAttributes = Tool.extend({
 	TotalCount: "0",
 	
 	count: function(fr) {
-		alert("Inside aria attributes");
+		//alert("Inside aria attributes");
 		var ARIAAttributeCount = 0;
     $('*', fr).each(function() {
         $.each(this.attributes, function() {
@@ -25,18 +27,18 @@ var ARIAAttributes = Tool.extend({
 	},
 	
 	getNumOf: function(fr) {
-		alert("Inside aria attributes");
+		//alert("Inside aria attributes");
 		recurseFrames(jQuery('html'), self.count);
 		return self.TotalCount;
 		
 	},
 	
-	add: function(fr) {
+	addStyle: function(fr) {
 		fr.find('head').append("<style type='text/css'>" + self.CSSString + "</style>");
 	
 	},
 	
-	remove: function(fr) {
+	removeStyle: function(fr) {
 		fr.find('style:contains(' + self.CSSString + ')').remove();
 		
 	},
