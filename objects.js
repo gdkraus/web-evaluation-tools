@@ -1,1 +1,1 @@
-var classes = ["Headings"];
+var classes = ["Headings","InternalLinks","ARIAAttributes","ARIALandmarks"];

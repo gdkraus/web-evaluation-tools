@@ -3,21 +3,21 @@ var Tool= Base.extend({
 	
 	CSSString: "",
 	
-	TotalCount: '0',
+	//TotalCount: '0',
 	
 	count: function(fr) {
-		alert("hello world");
+		//alert("hello world");
 	},
 	
 	getNumOf: function(fr) {
 		
 	},
 	
-	add: function(fr) {
+	addStyle: function(fr) {
 	
 	},
 	
-	remove: function(fr) {
+	removeStyle: function(fr) {
 		
 	},
 	

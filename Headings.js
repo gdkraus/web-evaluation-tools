@@ -8,10 +8,10 @@ var Headings = Tool.extend({
 		alert("inside headings constructor");
     self = this;
 	},
-	
+	TotalCount: 0,
 	
 	count: function(fr) {
-		//alert("Inside headings count");
+		alert("Inside headings count");
 		self.TotalCount = parseInt(self.TotalCount) + fr.find('h1,h2,h3,h4,h5,h6').length;
 		//alert("tool"+self.TotalCount);
 	},
@@ -19,18 +19,18 @@ var Headings = Tool.extend({
 	getNumOf: function(fr) {
 		alert("Inside headings getNumof");
 		recurseFrames(jQuery('html'), self.count);
-		alert(self.TotalCount);
+		//alert(self.TotalCount);
 		return self.TotalCount;
 		
 	},
 	
-	add: function(fr) {
+	addStyle: function(fr) {
 		alert("Inside headings add style");
 		fr.find('head').append("<style type='text/css'>" + self.CSSString + "</style>");
 	
 	},
 	
-	remove: function(fr) {
+	removeStyle: function(fr) {
 		alert("Inside headings remove style");
 		fr.find('style:contains(' + self.CSSString + ')').remove();
 		
