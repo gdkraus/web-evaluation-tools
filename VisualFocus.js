@@ -5,7 +5,6 @@ var VisualFocus = Tool.extend({
 	CSSString: ":focus{outline:#afff00;outline: solid 3px red !important}",
 	
 	constructor: function(name) {
-		//alert("inside headings constructor");
     self = this;
 	},
 

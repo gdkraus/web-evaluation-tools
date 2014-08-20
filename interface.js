@@ -8,7 +8,6 @@ var Tool= Base.extend({
 	//TotalCount: '0',
 	
 	count: function(fr) {
-		//alert("hello world");
 	},
 	
 	getNumOf: function(fr) {

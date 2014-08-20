@@ -6,14 +6,12 @@ var CrossSite = Tool.extend({
 	CSSString: ".cross-site-content-highlight{border: 3px orange solid !important;} p.cross-site-content-highlight-note{background:orange;color:#000;font-weight:bold;margin:3px;padding:3px;font-size:1em;}",
 	
 	constructor: function(name) {
-		//alert("inside headings constructor");
     self = this;
 	},
 	
 	TotalCount: "0",
 	
 	count: function(fr) {
-		//alert("Inside headings");
 
 		self.TotalCount = parseInt(self.TotalCount) + fr.find('iframe').length;
 	},

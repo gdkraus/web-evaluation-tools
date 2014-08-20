@@ -11,14 +11,7 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
     
     var i=0;
     var objects = new Array(classes.length);
-    
-   /* for(i=0;i<classes.length;i++)
-	{
-		alert(classes[i]);
-		
-		objects[i] = new window[classes[i]];
-	}
-*/
+ 
     var divString="<div id='ncsuA11yTools'>\n\ ";
     for(i=0;i<classes.length;i++)
     {
@@ -29,23 +22,16 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
 	}
 	divString+="</div>";
 	jQuery('body').prepend(divString);
-	var obj;
 	
 	for(i=0;i<classes.length;i++)
     {
-		//objects[i] = new window[classes[i]];
-		//obj = objects[i];
-		//alert(objects[i].CSSString);
 		var id = document.getElementById("ncsua11ytool"+classes[i]);
 		id.onchange = function(){
 			addTool(this);
 		}
-		//obj=null;
 		
 	}
 	
-	
-	//i=0;
 	
 	for(i=0;i<classes.length;i++)
     {
@@ -63,3 +49,5 @@ if (jQuery('#ncsuA11yTools').length == 0) { // insert the toolbar
     jQuery('style:contains(' + toolsCSSString + ')').remove()
 }
 }
+
+toolBar();

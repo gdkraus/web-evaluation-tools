@@ -5,14 +5,12 @@ var ARIARoles = Tool.extend({
 	CSSString: ".aria-role-highlight{background:#cfc;outline: 3px #0f0 solid;border: 3px #0f0 solid;clear:both;} p.aria-role-highlight-note{background:#9f9;font-weight:bold;margin:0;padding:0;font-size:1em;padding-top:1.2em;}",
 	
 	constructor: function(name) {
-		//alert("inside headings constructor");
     self = this;
 	},
 	
 	TotalCount: "0",
 	
 	count: function(fr) {
-		//alert("Inside headings");
 		self.TotalCount = parseInt(self.TotalCount) + fr.find('[role]:not([role="navigation"],[role="main"],[role="form"],[role="search"],[role="banner"],[role="complementary"],[role="contentinfo"])').length;
 	},
 	

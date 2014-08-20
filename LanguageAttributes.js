@@ -9,14 +9,12 @@ var LanguageAttributes = Tool.extend({
 	languageAttributesFirstPassAdd : true,
 	
 	constructor: function(name) {
-		//alert("inside headings constructor");
     self = this;
 	},
 	
 	TotalCount: "0",
 	
 	count: function(fr) {
-		//alert("Inside headings");
 		
 		   var languageAttributeCount = 0;
 
@@ -66,7 +64,6 @@ var LanguageAttributes = Tool.extend({
 	addNotes: function(fr) {
 		
 		var currentElement;
-    //fr.find('.language-attribute-highlight-note').remove()
     if (self.languageAttributesFirstPassAdd) { // need to do this check to accurately determine lang attributes on the outer most html element of page. html elements in iframes do not need this check
         $('*').each(function() {
             currentElement = this;

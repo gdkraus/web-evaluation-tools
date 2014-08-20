@@ -1,7 +1,6 @@
 function  addTool(temp) 
 {
 	var obj = new window[temp.name];
-		//alert("inside add tool");
 		if(obj.name!="HighContrast")
 		{
 		if (jQuery('style:contains(' + obj.CSSString + ')').length) {// need to remove from the DOM
@@ -48,7 +47,7 @@ function  addTool(temp)
         }
     }
 	}	*/
-	
+var errThrown=false;	
 	
 	function recurseFrames(fr, f) {
     f(fr);
