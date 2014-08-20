@@ -32,7 +32,7 @@ var ARIALandmarks = Tool.extend({
 	
 	addNotes: function(fr) {
 		
-		fr.find('.aria-landmark-highlight-note').remove()
+	//	fr.find('.aria-landmark-highlight-note').remove()
 		fr.find('[role="navigation"],[role="main"],[role="form"],[role="search"],[role="banner"],[role="complementary"],[role="contentinfo"]').each(function() {
         jQuery(this).addClass('aria-landmark-highlight')
         if (jQuery(this).attr('aria-label') !== undefined) {
