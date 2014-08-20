@@ -32,7 +32,7 @@ var ARIARoles = Tool.extend({
 	
 	addNotes: function(fr) {
 		
-		fr.find('.aria-role-highlight-note').remove()
+		//fr.find('.aria-role-highlight-note').remove()
 		fr.find('[role]:not([role="navigation"],[role="main"],[role="form"],[role="search"],[role="banner"],[role="complementary"],[role="contentinfo"])').each(function() {
         jQuery(this).addClass('aria-role-highlight')
         jQuery(this).prepend("<p class='aria-role-highlight-note'>Role: " + jQuery(this).attr("role") + "</p>")
